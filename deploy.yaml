@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kconsumer-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kconsumer-server
+  template:
+    metadata:
+      labels:
+        app: kconsumer-server
+    spec:
+      containers:
+        - name: kconsumer-server
+          image: kconsumer-server:latest
+          ports:
+            - containerPort: 8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kconsumer-server
+spec:
+  type: NodePort
+  ports:
+    - port: 8081
+      nodePort: 30081
+  selector:
+    app: kconsumer-server
