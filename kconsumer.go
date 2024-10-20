@@ -17,6 +17,7 @@ import (
 )
 
 // here's my new comment
+// another cool commit
 const DDB_CONNECT_URL = "http://helm-ddb-dynamodb.default.svc.cluster.local:8000"
 const KAFKA_CONNECT_URL = "kafka-service.kafka.svc.cluster.local:9092"
 
