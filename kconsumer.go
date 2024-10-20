@@ -16,6 +16,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
+const DDB_CONNECT_URL = "http://helm-ddb-dynamodb.default.svc.cluster.local:8000"
+const KAFKA_CONNECT_URL = "kafka-service.kafka.svc.cluster.local:9092"
+
 // Message represents the structure of the JSON message consumed from Kafka.
 type Message struct {
 	Key   string `json:"key"`
@@ -34,8 +37,7 @@ func initDynamoDB() {
 			func(service, region string) (aws.Endpoint, error) {
 				if service == dynamodb.ServiceID && region == "us-east-1" {
 					return aws.Endpoint{
-						//URL: "http://192.168.194.71:8000",
-						URL: "http://10.244.0.87:8000",
+						URL: DDB_CONNECT_URL,
 					}, nil
 				}
 				return aws.Endpoint{}, fmt.Errorf("unknown endpoint requested")
@@ -70,9 +72,8 @@ func main() {
 	config.Consumer.Return.Errors = true
 
 	// Define Kafka broker and topic
-	//brokers := []string{"192.168.194.38:9092"} // Update with your Kafka broker(s)
-	brokers := []string{"kafka-broker.kafka-service.kafka.svc.cluster.local:9092"} // cluster IP of K8s kafka service not pod
-	topic := "my-topic"                                                            // Update with your Kafka topic
+	brokers := []string{KAFKA_CONNECT_URL}
+	topic := "my-topic"
 
 	// Create a new consumer group
 	consumer, err := sarama.NewConsumer(brokers, config)
